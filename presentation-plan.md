@@ -35,8 +35,44 @@ PresentationPlan
     "duration_minutes": "integer|null",
     "language": "string",
     "brand_requirements": "object|null",
-    "template_locked": "boolean"
+    "template_locked": "boolean",
+    "output_format": "string|null",           // pptx | pdf | both
+    "required_sections": ["string"],          // Mandatory section names
+    "required_sources": ["string"]            // Mandatory citations
   }
+}
+```
+
+---
+
+## Normalized Input (Intermediate Representation)
+
+Produced by `classify_request` module before downstream reasoning.
+
+```json
+{
+  "topic": "string|null",
+  "audience": { "value": "string|null", "state": "explicit|inferred|unknown" },
+  "objective": { "value": "string|null", "state": "explicit|inferred|unknown" },
+  "desired_outcome": { "value": "string|null", "state": "explicit|inferred|unknown" },
+  "presentation_type": { "value": "string|null", "state": "explicit|inferred|unknown" },
+  "context": "object",
+  "hard_constraints": {
+    "max_slides": "integer|null",
+    "aspect_ratio": "string|null",
+    "duration_minutes": "integer|null",
+    "language": "string|null",
+    "brand_requirements": "object|null",
+    "template_locked": "boolean",
+    "output_format": "string|null",
+    "required_sections": ["string"],
+    "required_sources": ["string"]
+  },
+  "supplied_evidence": "array",
+  "supplied_assets": "array",
+  "explicit_fields": ["string"],
+  "inferred_fields": ["string"],
+  "unknown_fields": ["string"]
 }
 ```
 
@@ -289,9 +325,32 @@ Each slide is a semantic intent — NOT a layout.
 2. **Completeness:** Every substantive slide has `intent.key_message` (declarative)
 3. **Evidence:** Every assertion slide has `evidence.required: true` and at least one `source_requirements` entry
 4. **Archetype:** `archetype` selected AFTER `intent` and `evidence.visual_representation`
-4. **Traceability:** Each slide links to `narrative.structure` stage
-5. **No Fabrication:** No invented data, citations, or evidence in `source_requirements.data_provided: false`
-6. **Uncertainty:** All material unknowns captured in `assumptions` or `clarification_requirements`
+5. **Traceability:** Each slide links to `narrative.structure` stage
+6. **No Fabrication:** No invented data, citations, or evidence in `source_requirements.data_provided: false`
+7. **Uncertainty:** All material unknowns captured in `assumptions` or `clarification_requirements`
+8. **Input States:** `normalized_input` tracks explicit/inferred/unknown for all required conceptual inputs
+9. **Hard Constraints:** All constraints from request preserved in `request.constraints` and `normalized_input.hard_constraints`
+10. **Conflict Resolution:** Any conflicts resolved per constitutional priority, recorded in `assumptions`
+
+---
+
+## Conflict Resolution
+
+When generating the plan, apply constitutional priority order for any conflicts:
+
+```
+1. Truthfulness / factual integrity
+2. User objective and hard constraints
+3. Audience comprehension / decision usefulness
+4. Narrative coherence
+5. Accessibility / readability
+6. Visual hierarchy
+7. Brand consistency
+8. Aesthetic enhancement
+9. Decorative novelty
+```
+
+Resolution must be recorded in `assumptions` with domain `design` or `constraints`.
 
 ---
 
