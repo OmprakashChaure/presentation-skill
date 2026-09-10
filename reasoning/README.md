@@ -20,9 +20,10 @@ This directory contains the six reasoning modules that transform a presentation 
 
 | Module | Input | Output | Contract File |
 |--------|-------|--------|---------------|
-| classify_request | Raw request + supplied context | request, context, missing_context | `classify_request/reasoning.md` |
+| classify_request | Raw request + supplied context | request, context, missing_context, normalized_input | `classify_request/reasoning.md` |
 | determine_audience | Request, context, classification_hint | audience, assumptions, clarifications | `determine_audience/reasoning.md` |
 | determine_objective | Request, context, audience | objective, assumptions, clarifications | `determine_objective/reasoning.md` |
+| classify_presentation | Audience, objective, context, normalized_input | classification, assumptions, clarifications | `classify_presentation/reasoning.md` |
 | select_narrative | Objective, audience, classification, context | narrative, assumptions, clarifications | `select_narrative/reasoning.md` |
 | select_slide_type | Narrative, global_strategy | slides[], assumptions, clarifications | `select_slide_type/reasoning.md` |
 | select_visualization | Slides, available_data, global_strategy | Updated slides[], assumptions, clarifications | `select_visualization/reasoning.md` |
@@ -40,6 +41,7 @@ Each module consumes specific Stage 4 knowledge:
 | classify_request | `knowledge/universal/presentation-principles.md` (input contract, pipeline) |
 | determine_audience | `knowledge/universal/presentation-principles.md`, `knowledge/presentation_types/*.md`, `knowledge/storytelling/narrative-patterns.md` |
 | determine_objective | `knowledge/universal/presentation-principles.md`, `knowledge/presentation_types/*.md`, `knowledge/storytelling/narrative-patterns.md` |
+| classify_presentation | `knowledge/presentation_types/*.md`, `knowledge/storytelling/narrative-patterns.md`, `knowledge/universal/presentation-principles.md`, `PRESENTATION_CONSTITUTION.md` |
 | select_narrative | `knowledge/storytelling/narrative-patterns.md`, `knowledge/storytelling/*.md`, `knowledge/presentation_types/*.md` |
 | select_slide_type | `knowledge/layout/slide-types.md`, `knowledge/visualization/*.md`, `knowledge/storytelling/*.md` |
 | select_visualization | `knowledge/visualization/chart-selection.md`, `knowledge/visualization/diagrams.md`, `knowledge/visualization/tables.md`, `knowledge/visualization/data-storytelling.md` |
@@ -78,6 +80,7 @@ Before handing to Stage 6 Generation:
 - [ ] `audience` and `objective` populated before `classification`
 - [ ] `classification` before `narrative`
 - [ ] `narrative` before `slides`
+- [ ] Classification is multi-dimensional (primary_type + secondary_types + expertise + balance + evidence_burden + action + delivery_mode)
 - [ ] Each slide has `intent.key_message` (declarative)
 - [ ] Each substantive slide has `evidence.required: true`
 - [ ] Each evidence slide has `visual_representation.preferred`
